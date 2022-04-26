@@ -1,22 +1,6 @@
-import { render } from "@testing-library/react";
-import { Component, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import "./App.css";
-
-/*
-state = {
-  name: "",
-  imageUrl: "",
-  pokemonIndex: "",
-};
-
-useEffect {
-  const { name, url } = this.props;
-  const pokemonIndex = url.split("/")[url.split("/").length - 2];
-  const imageUrl = `http://pokeapi.co/media/sprites/pokemon/${pokemonIndex}.png`;
-  this.setState({ name, imageUrl, pokemonIndex });
-}
-*/
 
 export default function App() {
   return (
@@ -57,7 +41,49 @@ export function Home() {
   );
 }
 
+type PokemonList = {
+  id: number;
+  name: string;
+  types: string[];
+  imageUrl: string;
+}
+
 export function List() {
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [pokemons, setPokemons] = useState([] as PokemonList[]);
+
+  const newData : PokemonList[] = [];
+
+  useEffect(() => {
+    const fetchPokemonsFromAPI = async () => {
+      const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=5");
+      const data = await response.json();
+      
+      await data.results.map(async (pokemon: any) => {
+        const pokeFetch = await fetch(pokemon.url);
+        const pokeData = await pokeFetch.json();
+        newData.push({
+          id: pokeData.id,
+          name: pokeData.name,
+          types: pokeData.types.map((t: any) => t.type.name),
+          imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeData.id}.png`,
+        });
+      }) as PokemonList[]
+    };
+    
+    fetchPokemonsFromAPI();
+    setPokemons(newData);
+    
+    setIsLoaded(true);
+  }, []);
+
+  console.log("POKEMONS", pokemons);
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div
       className="flex flex-col items-start min-h-screen p-10 rounded"
@@ -67,12 +93,22 @@ export function List() {
         backgroundSize: "cover",
       }}
     >
-      <h1 className="mt-24 text-6xl tracking-widest text-poke-yellow">
+      <h1 className="mt-24 text-6xl tracking-widest text-poke-yellow title">
         Liste des pokémons
       </h1>
-      <p className="mt-5 text-lg text-center text-poke-darkblue">
-        Votre pokédex personnel entièrement personnalisable.
-      </p>
+
+      <div className="grid grid-cols-5 gap-4 mt-5 text-white">
+
+        {pokemons.map((pokemon: any) => (
+          <div key={pokemon.id} className="p-2 text-white rounded bg-poke-darkblue">
+            <img src={pokemon.imageUrl} alt={pokemon.name} />
+            <h3 className="mt-3 text-lg text-poke-yellow">{pokemon.name}</h3>
+            {/* <p className="text-sm">Type of {pokemon.types.join(", ")}</p> */}
+          </div>  
+        ))}
+
+      </div>
+
     </div>
   );
 }
