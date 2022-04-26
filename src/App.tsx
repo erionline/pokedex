@@ -89,19 +89,19 @@ export function List() {
     <React.Fragment>
 
     <div
-      className={`flex flex-col items-start justify-center min-h-full p-20 rounded md:p-15 ${areDetailsShown ? 'overflow-y-hidden' : ''}`}
+      className={`flex flex-col items-start justify-center min-h-screen p-20 rounded md:p-15`}
       style={{
         backgroundImage:
           "url(https://cdn.eri.gg/2ppB9UtjJiO1jKE6CwcP/download)",
         backgroundSize: "cover",
       }}
     >
-
+{/* 
       {areDetailsShown && (
         <div className="absolute inset-0 z-50 min-w-full min-h-full text-2xl font-bold text-center bg-black/90 text-poke-yellow">
           BONJOIR
         </div>
-      )}
+      )} */}
 
       <h1 className="text-5xl tracking-widest text-poke-yellow title">
         List of Pokémons
@@ -130,10 +130,7 @@ export function List() {
 
       <button 
         className="px-4 py-1.5 mt-5 font-bold rounded text-poke-yellow bg-poke-darkblue"
-        onClick={() => {
-          fetchPokemonsFromAPI(pokemons.length, 50);
-          // setPokemons({...newData});
-        }}
+        onClick={() => {fetchPokemonsFromAPI(pokemons.length, 50) }}
       >
         Load more Pokémons
       </button>
