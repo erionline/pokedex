@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-.title {
+.title-blue {
   font-family: 'Pokemon Solid', sans-serif;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: #0A285F;
+}
+
+.title-yellow {
+  font-family: 'Pokemon Solid', sans-serif;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #FFCC00;
 }
